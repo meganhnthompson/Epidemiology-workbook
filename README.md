@@ -1,12 +1,6 @@
 # Epidemiology-workbook
 Class project for Topics in biological Statistics
 
-#Q1 b)
-par(mfrow=c(2,2)) # a 2 x 2 grid of plots
-plot(as.numeric(anteaters$location),anteaters.man$resid[,1],xlab="location(code)",ylab="Residual",main="logx1 residuals")
-plot(as.numeric(anteaters$location),anteaters.man$resid[,2],xlab="location(code)",ylab="Residual", main="logx2 residuals")
-plot(as.numeric(anteaters$location),anteaters.man$resid[,3],xlab="location(code)",ylab="Residual",main="logx3 residuals")
-
 #Q2,a)
 
 attach(epidemiology.data)
@@ -99,6 +93,11 @@ for (i in 1:length(R0.vector)){
 #e)
 persp(R0.vector,D.vector,errorSS.output,theta = 100,phi = -100)
 
+D.matrix<-matrix(D.vector)
+R0.matrix<-matrix(R0.vector)
+z<-cbind(D.matrix, R0.matrix)
+persp(R0,D,z,theta = 0,phi = 15)
+
 #f)
 attach(epidemiology.data)
 s0<-300000 #starting value for susceptibiles
@@ -144,205 +143,5 @@ plot(time.vector,I,type="l",xlab="Time",ylab="Number of People Infected (I)", ma
 points(Week*7,No.infected,pch=21,col="blue")
 
 
-
-#Q3) a)
-iris.sl.aov<-aov(Sepal.Length~Species, data = iris)
-summary(iris.sl.aov)
-TukeyHSD(iris.sl.aov)
-iris.sw.aov<-aov(Sepal.Width~Species, data = iris)
-summary(iris.sw.aov)
-TukeyHSD(iris.sw.aov)
-iris.pl.aov<-aov(Petal.Length~Species, data = iris)
-summary(iris.pl.aov)
-TukeyHSD(iris.pl.aov)
-iris.pw.aov<-aov(Petal.Width~Species, data = iris)
-summary(iris.pw.aov)
-TukeyHSD(iris.pw.aov)
- 
-#c)
-iris.man<-manova(cbind(Sepal.Length,Sepal.Width,Petal.Length,Petal.Width)~Species, data= iris)
-
-#Q4) a)
-aa.man<-manova(cbind(Alanine,Aspartic,Tyrosine)~Gender, data= centepieds)
-
-#b)
-summary.aov(aa.man)
-
-#Q5) a)
-Plasma.Ca<- c(16.5,18.4,12.7,14.5,11.0,10.8,39.1,26.2,21.3, 32.0,23.8,28.8)
-Water.loss<- c(76,71,64,80,72,77,71,70,63,65,69,67)
-Sex<- as.factor(rep(rep(c("Female","Male"),rep(3,2)), 2))
-Hormone<-as.factor(rep(c("No hormone","Hormone"),rep(6,2)))
-
-#b)
-matrix<-cbind(Plasma.Ca,Water.loss)
-hormone.man<-manova(matrix~Sex*Hormone)
-summary(hormone.man)
-
-summary.aov(hormone.man)
-
-#Q6) b)
-#Wilk's lambda
-man<-manova(cbind(M1,M2,M3)~Treatment, data= fields)
-summary(man, test="Wilks")
-#Pillai trace
-summary(man, test = "Pillai")
-#Hotelling-Lawley statistic
-summary(man, test="H")
-#Roy's statistics
-summary(man, test="R")
-
-
-#c)
-Cont.T1.man<- manova(cbind(M1,M2,M3)~Treatment,data=fields,subset=Treatment %in% c("Control","T1"))
-summary(Cont.T1.man)
-Cont.T2.man<- manova(cbind(M1,M2,M3)~Treatment,data=fields,subset=Treatment %in% c("Control","T2"))
-summary(Cont.T2.man)
-Cont.T3.man<- manova(cbind(M1,M2,M3)~Treatment,data=fields,subset=Treatment %in% c("Control","T3"))
-summary(Cont.T3.man)
-
-T1.T2.man<- manova(cbind(M1,M2,M3)~Treatment,data=fields,subset=Treatment %in% c("T1","T2"))
-summary(T1.T2.man)
-T1.T3.man<- manova(cbind(M1,M2,M3)~Treatment,data=fields,subset=Treatment %in% c("T1","T3"))
-summary(T1.T3.man)
-T2.T3.man<- manova(cbind(M1,M2,M3)~Treatment,data=fields,subset=Treatment %in% c("T2","T3"))
-summary(T2.T3.man)
-
-#d)
-summary.aov(man)
-
-#Q7)
-means <- tapply(1:nrow(skulls), skulls$epoch, function(i)
-  apply(skulls[i,colnames(skulls)[-1]], 2, mean))
-means <- matrix(unlist(means), nrow = length(means), byrow = TRUE)
-colnames(means) <- colnames(skulls)[-1]
-rownames(means) <- levels(skulls$epoch)
-pairs(means,
-      panel = function(x, y) {
-        text(x, y, levels(skulls$epoch))
-      })
-
-
-#Second Part
-
-skull.ageone.man<- manova(cbind(mb,bh,bl,nh)~epoch,data=skulls,subset=epoch %in% c("c4000BC","c3300BC"))
-summary.aov(skull.ageone.man)
-skull.agetwo.man<- manova(cbind(mb,bh,bl,nh)~epoch,data=skulls,subset=epoch %in% c("c4000BC","c1850BC"))
-summary.aov(skull.agetwo.man)
-skull.agethree.man<- manova(cbind(mb,bh,bl,nh)~epoch,data=skulls,subset=epoch %in% c("c4000BC","c200BC"))
-summary.aov(skull.agethree.man)
-skull.agefour.man<- manova(cbind(mb,bh,bl,nh)~epoch,data=skulls,subset=epoch %in% c("c4000BC","cAD150"))
-summary.aov(skull.agefour.man)
-
-#Q8)a)
-test1<-manova(cbind(X1,X2,X3)~as.factor(group), data=Q8)
-summary(test1)
-
-
-
-
-N<-6
-attach(Q8)
-Y<-as.matrix(Q8[,1:3])
-sample.mean1<-apply(Y[1:N,],2,mean)
-sample.mean2<-apply(Y[(N+1):(2*N),],2,mean)
-sample.mean3<-apply(Y[(2*N+1):(3*N),],2,mean)
-sample.mean4<-apply(Y[(3*N+1):(4*N),],2,mean)
-overall.mean<-apply(Y,2,mean)
-Total.SSP<-matrix(0,3,3)
-for (i in 1:24){
-  Total.SSP<-Total.SSP+(Y[i,]-overall.mean)%*%t(Y[i,]-overall.mean)	
-}
-Between.SSP<-matrix(0,3,3)
-for (i in 1:4){
-  sample.mean<-apply(Y[((i-1)*N+1):(i*N),],2,mean)
-  Between.SSP<-Between.SSP+N*(sample.mean-overall.mean)%*%t(sample.mean-overall.mean)
-}
-Within.SSP<-Total.SSP-Between.SSP
-
-group2<-c(1,2,3,4)
-means<-c(5.333333,6.005556,6.161111,4.861111)
-
-
-test1<-manova(means~group2, data=Q8)
-summary(test1)
-summary.aov(test1)
-
-#attempt 2 Q8
-
-View(Q8)
-attach(Q8)
-test1<-manova(cbind(X1, X2, X3)~as.factor(group), data=Q8)
-summary(test1)
-Q8
-Y<-as.matrix(Q8[,1:3])
-N<-6
-sample.mean1<-apply(Y[1:N,],2,mean)
-sample.mean2<-apply(Y[(N+1):(2*N),],2,mean)
-sample.mean3<-apply(Y[(2*N+1):(3*N),],2,mean)
-sample.mean4<-apply(Y[(3*N+1):(4*N),],2,mean)
-overall.mean<-apply(Y,2,mean)
-Total.SSP<-matrix(0,3,3)
-for (i in 1:24){
-  Total.SSP<-Total.SSP+(Y[i,]-overall.mean)%*%t(Y[i,]-overall.mean)
-}
-Between.SSP<-matrix(0,3,3)
-for (i in 1:4){
-  sample.mean<-apply(Y[((i-1)*N+1):(i*N),],2,mean)
-  Between.SSP<-Between.SSP+N*(sample.mean-overall.mean)%*%t(sample.mean-overall.mean)
-}
-Within.SSP<-Total.SSP-Between.SSP
-sample.mean1
-Y[1,]
-A<-(Y[1,]-overall.mean)
-A
-t(A)
-A%*%t(A)
-Y
-Total.SSP
-Between.SSP
-Within.SSP
-Lambda<-det(Within.SSP)/det(Within.SSP+Between.SSP)
-Lambda
-Q8.man<-manova(cbind(X1, X2, X3) ~ as.factor(group), data = Q8)
-Q8.man
-summary(Q8.man,test="W")
-sample.mean1
-sample.mean2
-sample.mean3
-sample.mean4
-psi1<-sample.mean1-sample.mean4
-psi1
-psi2<-sample.mean2-sample.mean3
-psi2
-psi3<-sample.mean1-sample.mean2-sample.mean3+sample.mean4
-psi3
-denominator1<-2/3
-denominator2<-2/3
-denominator3<-4/3
-tpsi1<-t(psi1)
-tpsi2<-t(psi2)
-tpsi3<-t(psi3)
-Bpsi1<-(psi1%*%tpsi1)/(2/3)
-Bpsi1
-Bpsi2<-(psi2%*%tpsi2)/(2/3)
-Bpsi2
-Bpsi3<-(psi3%*%tpsi3)/(4/3)
-Bpsi3
-lambdapsi1<-(det(Within.SSP)/det(Within.SSP+Bpsi1))
-lambdapsi1
-lambdapsi2<-(det(Within.SSP)/det(Within.SSP+Bpsi2))
-lambdapsi2
-lambdapsi3<-(det(Within.SSP)/det(Within.SSP+Bpsi3))
-lambdapsi3
-F1<-((1-lambdapsi1)/lambdapsi1)*((24-4-3+1)/3)
-F2<-((1-lambdapsi2)/lambdapsi2)*((24-4-3+1)/3)
-F3<-((1-lambdapsi3)/lambdapsi3)*((24-4-3+1)/3)
-F1
-F2
-F3
-pf(F1, 3, 18, lower.tail = FALSE, log.p=FALSE)
-pf(F2, 3, 18, lower.tail = FALSE, log.p=FALSE)
-pf(F3, 3, 18, lower.tail = FALSE, log.p=FALSE)
 
 
